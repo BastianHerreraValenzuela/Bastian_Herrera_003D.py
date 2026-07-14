@@ -1,3 +1,4 @@
+
 Diccionario_planes={}
 Diccionario_inscripciones={}
 
@@ -17,89 +18,126 @@ def validar_opcion():
                 print("Solo se permiten numeros en esta opcion.")
                 menu()
 
-def validacion_codigo()-> True |False:
+def validacion_codigo():
     while True:
         codigo=input("Ingrese el codigo: ")
         if codigo in Diccionario_planes:
-            return False
+            print("El codigo ingresado ya existe.")
         else:
-            return True
+            return codigo
+        
+def buscar_codigo():
+    codigo = input("Ingrese el código: ")
+
+    if codigo in Diccionario_planes:
+        return codigo
+    else:
+        print("El código no existe.")
+        return None
     
 def validar_nombre():
     while True:
         nombre=input("Ingrese el nombre: ")
         if nombre.strip()=="":
-            return False
+            print("El nombre no puede contener espacios vacios.")
         else:
-            return True
+            return nombre
 
 def tipo_plan():
     while True:
-        plan=input("Ingrese el tipo de plan [Anual-Semestral-Mensual]")
-        if plan.lower()!="anual" and plan.lower()!="semestral" and plan.lower()!="mensual":
-            return False
+        plan=input("Ingrese el tipo de plan [Anual-Semestral-Mensual]: ")
+        if plan.lower().strip()=="anual":
+            print("plan registrado correctamente.")
+            return plan
+        elif plan.lower().strip()=="semestral":
+            print("plan registrado correctamente.") 
+            return plan
+        elif plan.lower().strip()=="mensual":
+            print("Plan registrado correctamente.")
+            return plan
         elif plan.isalpha!= True:
-            return False
+            print("Solo se permiten letras.")
         else:
-            return True
+            print("El plan ingresado es incorrecto ingrese una opcion valida [Anual-Semestral-Mensual].")
+            continue
 
 def duracion():
     while True:
         try:
             duracion=int(input("Ingrese la duracion del plan: "))
             if duracion<=0:
-                return False
+                print("El valor ingresado no puede ser 0 o menor.")
             else:
-                return True
+                return duracion
         except Exception:
-            return False
+            print("Solo se permiten numeros.")
+
+def cupos_tipo(tipo):
+    total_cupos = 0
+    tipo_buscado = tipo_plan().lower().strip()
+    for codigo, datos_inscripcion in Diccionario_inscripciones.items():
+        tipo_plan_actual = datos_inscripcion[1].lower().strip()
+        if tipo_plan_actual == tipo_buscado:
+            if codigo in Diccionario_planes:
+                cupos_disponibles = Diccionario_planes[codigo][1]
+                total_cupos += cupos_disponibles
+    print(f"\nEl total de cupos disponibles para el tipo de plan '{tipo}' es: {total_cupos}")
+
 
 def acceso_piscina():
     while True:
         acceso=input("Ingrese si posee acceso a piscina [s/n]: ")
         if acceso.lower()!="s" and acceso.lower()!="n":
-            return False
+            print("Valor ingresado invalido, ingrese un valor valido [s/n].")
         elif len(acceso)>1:
-            return False
+            print("Solo puede ingresar un solo valor [s/n].")
         elif acceso.lower()=="s" or acceso.lower()=="n":
-            return True
+            return acceso
     
-
 def incluye_clases():
     while True:
         clases=input("Ingrese si incluye clases [s/n]: ")
         if clases.lower()!="s" and clases.lower()!="n":
-            return False
+            print("El valor ingresado es invalido, ingrese un valor valido [s/n].")
         elif len(clases)>1:
-            return False 
-        elif clases.lower=="s" or clases.lower()=="n":
-            return True
+            print("Solo puede ingresar un valor [s/n].") 
+        else:
+            return clases
         
 def horario():
     while True:
-        horario=input("Ingrese el horario: ")
+        horario=input("Ingrese el horario [mañana-tarde-noche-libre]: ")
         if horario.strip()=="":
-            return False
+            print("No puede ingresar espacios vacios.")
+        elif horario.lower().strip()=="noche":
+            return horario
+        elif horario.lower().strip()=="mañana":
+            return horario
+        elif horario.lower().strip()=="tarde":
+            return horario
+        elif horario.lower().strip()=="libre":
+            return horario
         else:
-            return True
+            print("Tipo de horario ingresado invalido, ingrese una opcion valida.")
+
 
 def precio():
     while True:
         try:
             precios=int(input("Ingrese el precio: "))
             if precios<=0:
-                return False
+                print("Valor ingresado incorrecto, ingrese un valor valido .")
             else:
-                return True
+                return precios 
         except Exception:
-            return False
+            print("Solo se permiten numeros.")
 
-def cupos():
+def Cupos():
     while True:
         try:
             cupo=int(input("Ingrese la cantidad de cupos disponibles: "))
             if cupo<0:
-                print("Valor ingresado no puede ser menor a 0.")
+                print("El valor ingresado es menor a 0.")
             else:
                 return cupo
         except Exception:
@@ -135,71 +173,36 @@ def menu():
 
             opcion=validar_opcion()
 
-
             if opcion ==1:
-                print(Diccionario_inscripciones)
-                print(Diccionario_planes)
-                
+                cupo=cupos_tipo()
+            elif opcion==3:
+                codigo = buscar_codigo()
+                if codigo is not None:
+                    nuevo_precio = precio()
+                    Diccionario_planes[codigo][0] = nuevo_precio
+                    print("Precio actualizado correctamente.")
 
-            if opcion==4:
+            elif opcion==4:
 
                     codigo=validacion_codigo()
-                    if codigo==False:
-                        print("El codigo ingresado ya existe.")
-                    else:
-                        return codigo
-                    
                     nombre=validar_nombre()
-                    if nombre==False:
-                        print("El nombre no puede ser un espacio en blanco, ingrese un nombre valido.")
-                    else:
-                        return nombre
-                    
                     plan=tipo_plan()
-                    if plan==False:
-                        print("Ingrese una opcion valida por favor [Anual-Semestral-Mensual].")
-                    else:
-                        return plan
-
                     durar=duracion()
-                    if durar==False:
-                        print("el tiempo ingresado es invalido, por favor ingrese un valor valido.")
-                    else:
-                        return durar
-                    
                     piscina=acceso_piscina()
-                    if piscina==False:
-                        print("La opcion ingresada es invalida, por favor ingrese una valida [s/n].")
-                    else:
-                        return piscina
-                    
                     clases=incluye_clases()
-                    if clases ==False:
-                        print("Opcion ingresada invalida por favor ingrese una opcion valida [s/n].")
-                    else:
-                        return clases
-                    
                     hora=horario()
-                    if hora==False:
-                        print("Opcion ingresada invalida, por favor ingrese una opcion vaida.")
-                    else:
-                        return True
-                    
                     precios=precio()
-                    if precios==False:
-                        print("Valor ingresado invalido, por favor ingrese un valor valido.")
-                    else:
-                        return precios
-                    
-                    cupo=cupos()
-                    if cupo==False:
-                        print("Valor ingresado invalido, por favor ingrese un valor valido.")
-                    else:
-                        return cupo 
-
+                    cupo=Cupos()
                     agregar_plan(codigo, nombre, plan, durar, piscina,clases,
-        hora,precios,cupo)
-                
+                        hora,precios,cupo)
+                    
+            elif opcion==5:
+                codigo = buscar_codigo()
+                if codigo is not None:
+                    del Diccionario_planes[codigo]
+                    del Diccionario_inscripciones[codigo]
+                    print("Plan eliminado correctamente.")
+
             elif opcion==6:
                 print("Programa finalizado.")
                 break
